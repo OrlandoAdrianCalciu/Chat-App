@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, ImageBackground, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Button } from 'react-native-web';
 
 
 const image = { uri: "https://user-images.githubusercontent.com/105219302/193833223-9aafd141-68fc-4878-b5ef-74ac811db3d3.png" };
