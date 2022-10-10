@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import KeyboardListener from 'react-native-keyboard-listener';
 
 
 export default class Chat extends React.Component {
@@ -62,6 +63,10 @@ export default class Chat extends React.Component {
 
         return (
             <View style={[{ backgroundColor: color }, styles.container]}>
+                <KeyboardListener
+                onWillShow={() => { this.setState({ keyboardOpen: true}); }}
+                onWillHide={() => { this.setState({ keyboardOpen: false}); }}
+                />
             <GiftedChat
             renderBubble={this.renderBubble.bind(this)}
                 messages={this.state.messages}
@@ -80,7 +85,6 @@ export default class Chat extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginBottom: -40,
         // justifyContent: 'center',
         // alignItems: 'center',
     },

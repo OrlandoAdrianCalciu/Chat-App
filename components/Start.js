@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, ImageBackground, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Button } from 'react-native-web';
 
 
 const image = { uri: "https://user-images.githubusercontent.com/105219302/193833223-9aafd141-68fc-4878-b5ef-74ac811db3d3.png" };
@@ -22,7 +21,7 @@ export default class Start extends React.Component {
                         <View style={styles.sectionStyle}>
                         <Image source={icon} style={styles.icon} />
                         <TextInput
-                            style={styles.text}
+                            style={styles.inputText}
                             onChangeText={(name) => this.setState({ name })}
                             value={this.state.name}
                             placeholder="Your Name" />
@@ -54,12 +53,19 @@ const styles = StyleSheet.create({
         fontSize: 45,
         fontWeight: "600",
         color: "#FFF",
-        textAlign: "center",
-        marginBottom: "65%",
+        textAlign: "center"
     },
     image: {
         flex: 1,
         justifyContent: "center",
+    },
+    inputText: {
+        paddingRight: "60%",
+        marginLeft: "2%",
+        fontSize: 16,
+        fontWeight: "300",
+        color: "#757083",
+        opacity: 50,
     },
     text: {
         fontSize: 16,
@@ -73,6 +79,7 @@ const styles = StyleSheet.create({
         width: "88%",
         height: "44%",
         justifyContent: "space-between",
+        marginTop: "20%",
         marginLeft: "6%",
     },
     colortext: {
@@ -110,7 +117,7 @@ const styles = StyleSheet.create({
         width: '88%',
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 20,
+        marginLeft: "6%",
         marginBottom: 20,
         height: 50,
     },
