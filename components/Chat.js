@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Platform, KeyboardAvoidingView } from 'react-na
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
 
 
 const firebase = require('firebase');
@@ -19,6 +21,8 @@ export default class Chat extends React.Component {
                 name: '',
             },
             isConnected: null,
+            image: null,
+            location: null,
         };
 
         const firebaseConfig = {
@@ -52,6 +56,8 @@ export default class Chat extends React.Component {
                     _id: data.user._id,
                     name: data.user.name,
                 },
+                image: data.image || null,
+                location: data.location || null,
             });
         });
         this.setState({
@@ -59,39 +65,39 @@ export default class Chat extends React.Component {
         });
     };
 
-   async getMessages()  {
+    async getMessages() {
         let messages = '';
         try {
-          messages = (await AsyncStorage.getItem('messages')) || [];
-          this.setState({
-            messages: JSON.parse(messages),
-          });
+            messages = (await AsyncStorage.getItem('messages')) || [];
+            this.setState({
+                messages: JSON.parse(messages),
+            });
         } catch (e) {
-          console.log(e.message);
+            console.log(e.message);
         }
-      };
+    };
 
     async saveMessages() {
         try {
-          await AsyncStorage.setItem(
-            'messages',
-            JSON.stringify(this.state.messages)
-          );
+            await AsyncStorage.setItem(
+                'messages',
+                JSON.stringify(this.state.messages)
+            );
         } catch (e) {
-          console.log(e.message);
+            console.log(e.message);
         }
-      };
+    };
 
     async deleteMessages() {
         try {
-          await AsyncStorage.removeItem('messages');
-          this.setState({
-            messages: [],
-          });
+            await AsyncStorage.removeItem('messages');
+            this.setState({
+                messages: [],
+            });
         } catch (e) {
-          console.log(e.messages);
+            console.log(e.messages);
         }
-      };
+    };
 
     componentDidMount() {
         let { name } = this.props.route.params;
@@ -136,10 +142,10 @@ export default class Chat extends React.Component {
 
     componentWillUnmount() {
         if (this.isConnected) {
-          this.unsubscribe();
-          this.authUnsubscribe();
+            this.unsubscribe();
+            this.authUnsubscribe();
         }
-      }
+    }
 
     onSend(messages = []) {
         this.setState(
@@ -164,6 +170,8 @@ export default class Chat extends React.Component {
             text: message.text,
             createdAt: message.createdAt,
             user: message.user,
+            image: message.image || null,
+            location: message.location || null,
         });
     };
 
@@ -191,6 +199,32 @@ export default class Chat extends React.Component {
         )
     }
 
+    renderCustomActions = (props) => {
+        return <CustomActions {...props} />;
+    };
+    
+    renderCustomView (props) {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return(
+                <MapView
+                style={{
+                    width: 150,
+                    height: 100,
+                    borderRadius: 13,
+                    margin: 3}}
+                  region={{
+                    latitude: currentMessage.location.latitude,
+                    longitude: currentMessage.location.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                />
+            );
+        }
+        return null;
+    }
+
     render() {
         let { color, name } = this.props.route.params;
 
@@ -201,6 +235,8 @@ export default class Chat extends React.Component {
                     onWillHide={() => { this.setState({ keyboardOpen: false }); }}
                 /> */}
                 <GiftedChat
+                    renderActions={this.renderCustomActions}
+                    renderCustomView={this.renderCustomView}
                     renderBubble={this.renderBubble.bind(this)}
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
                     messages={this.state.messages}
@@ -223,5 +259,4 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
     },
 })
-
 
