@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,12 +8,13 @@ import * as Location from 'expo-location';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
+
 class CustomActions extends React.Component {
     // state = {
     //     image: null,
     //     location: null,
     // };
- 
+
 
     pickImage = async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -59,9 +60,9 @@ class CustomActions extends React.Component {
     }
 
     uploadImageFetch = async (uri) => {
-        const blob = await new Promise( (resolve, reject) => {
+        const blob = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.onload=function() {
+            xhr.onload = function () {
                 resolve(xhr.response);
             };
             xhr.onerror = function (e) {
@@ -98,20 +99,25 @@ class CustomActions extends React.Component {
                 cancelButtonIndex,
             },
             async (buttonIndex) => {
+                console.log("hello!")
                 switch (buttonIndex) {
                     case 0:
                         console.log("user wants to pick an image");
-                        return this.pickImage();
+                        this.pickImage();
+                        break
                     case 1:
                         console.log("user wants to take a photo");
-                        return this.takePhoto();
+                        this.takePhoto();
+                        break
                     case 2:
                         console.log("user wants to get their location");
-                        return this.getLocation();
+                        this.getLocation();
+                        break
                 }
             }
         );
     };
+
 
     render() {
         return (
@@ -119,7 +125,7 @@ class CustomActions extends React.Component {
                 accessible={true}
                 accessibilityLabel="More options"
                 accessibilityHint="Let’s you choose to send an image or your geolocation."
-                style={[styles.container]} 
+                style={[styles.container]}
                 onPress={this.onActionPress}>
                 <View style={[styles.wrapper, this.props.wrapperStyle]}>
                     <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>

@@ -6,7 +6,6 @@ import NetInfo from '@react-native-community/netinfo';
 import CustomActions from './CustomActions';
 import MapView from 'react-native-maps';
 
-
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -82,7 +81,7 @@ export default class Chat extends React.Component {
             await AsyncStorage.setItem(
                 'messages',
                 JSON.stringify(this.state.messages)
-            );
+            );setOptions
         } catch (e) {
             console.log(e.message);
         }
@@ -202,23 +201,24 @@ export default class Chat extends React.Component {
     renderCustomActions = (props) => {
         return <CustomActions {...props} />;
     };
-    
-    renderCustomView (props) {
+
+    renderCustomView(props) {
         const { currentMessage } = props;
         if (currentMessage.location) {
-            return(
+            return (
                 <MapView
-                style={{
-                    width: 150,
-                    height: 100,
-                    borderRadius: 13,
-                    margin: 3}}
-                  region={{
-                    latitude: currentMessage.location.latitude,
-                    longitude: currentMessage.location.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  }}
+                    style={{
+                        width: 150,
+                        height: 100,
+                        borderRadius: 13,
+                        margin: 3
+                    }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
                 />
             );
         }
@@ -235,15 +235,15 @@ export default class Chat extends React.Component {
                     onWillHide={() => { this.setState({ keyboardOpen: false }); }}
                 /> */}
                 <GiftedChat
-                    renderActions={this.renderCustomActions}
-                    renderCustomView={this.renderCustomView}
                     renderBubble={this.renderBubble.bind(this)}
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
                         _id: this.state.user._id, name: name
-                    }} />
+                    }}
+                    renderActions={this.renderCustomActions}
+                    renderCustomView={this.renderCustomView} />
                 {Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
                 {/* <View style={[{ backgroundColor: color }, styles.container]}>
                 <Text style={styles.text}>Hello Chat Screen!</Text> */}

@@ -1,44 +1,36 @@
-import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import Start from './components/Start';
 import Chat from './components/Chat';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+const Stack = createStackNavigator();
 
-// const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
-
-export default class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { text: "" };
-  // }
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { text: '' };
+  }
 
   render() {
     return (
       <NavigationContainer>
-        <Tab.Navigator
+        <Stack.Navigator
           initialRouteName="Start"
         >
-          <Tab.Screen
+          <Stack.Screen
             name="Start"
             component={Start}
           />
-          <Tab.Screen
+          <Stack.Screen
             name="Chat"
             component={Chat}
           />
-        </Tab.Navigator>
-        
+        </Stack.Navigator>
       </NavigationContainer>
     );
   }
-};
-
-
-const styles = StyleSheet.create({
-
-})
+}
