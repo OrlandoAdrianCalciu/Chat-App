@@ -10,14 +10,9 @@ import 'firebase/firestore';
 
 
 class CustomActions extends React.Component {
-    // state = {
-    //     image: null,
-    //     location: null,
-    // };
-
 
     pickImage = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (status === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -25,29 +20,31 @@ class CustomActions extends React.Component {
             }).catch(error => console.log(error));
 
             if (!result.cancelled) {
-                this.setState({
-                    image: result
+                const imageUrl = await this.uploadImageFetch(result.uri);
+                this.props.onSend({
+                    image: imageUrl
                 });
             }
         }
     }
 
     takePhoto = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
         if (status === 'granted') {
             let result = await ImagePicker.launchCameraAsync().catch(error => console.log(error));
 
             if (!result.cancelled) {
-                this.setState({
-                    image: result
+                const imageUrl = await this.uploadImageFetch(result.uri);
+                this.props.onSend({
+                    image: imageUrl
                 });
             }
         }
     }
 
     getLocation = async () => {
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        const { status } = await Location.requestForegroundPermissionsAsync();
         if (status === 'granted') {
             let result = await Location.getCurrentPositionAsync({});
 
@@ -113,6 +110,7 @@ class CustomActions extends React.Component {
                         console.log("user wants to get their location");
                         this.getLocation();
                         break
+                    default:
                 }
             }
         );
